@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+
+# extensions sources built with Cython
+extensions/*.c
