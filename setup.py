@@ -56,22 +56,11 @@ setup(
         Extension(
             "pyrilla.ga", ["extensions/ga.pyx"],
             include_dirs=EXTENSIONS_INCLUDE_DIRS,
-            extra_objects=EXTENSIONS_INCLUDE_DIRS,
+            extra_objects=EXTENSIONS_EXTRA_OBJECTS,
         ),
-        Extension(
-            "pyrilla.gau", ["extensions/gau.pyx"],
-            include_dirs=EXTENSIONS_INCLUDE_DIRS,
-            extra_objects=EXTENSIONS_INCLUDE_DIRS,
-        ),
-        Extension(
-            "pyrilla.gc", ["extensions/gc.pyx"],
-            include_dirs=EXTENSIONS_INCLUDE_DIRS,
-            extra_objects=EXTENSIONS_INCLUDE_DIRS,
-        )
     ],
 
     setup_requires=['cython'],
-    install_requires=[],
 
     include_package_data=True,
 
