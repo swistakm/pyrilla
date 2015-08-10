@@ -4,7 +4,7 @@ from pyrilla import ga
 
 
 def main():
-    ga.hello()
+#    ga.hello()
 
     if len(argv) != 2:
         print """

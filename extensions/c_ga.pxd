@@ -2,7 +2,7 @@ include "h_gc_types.pxi"
 include "h_ga_types.pxi"
 
 cdef extern from "gorilla/ga.h":
-    cdef gc_int32 ga_version_check(
+    cdef gc_int32 ga_version_check (
         gc_int32 in_major, gc_int32 in_minor, gc_int32 in_rev
     )
 

@@ -1,5 +1,4 @@
 cdef extern from "gorilla/common/gc_types.h":
-
     IF UNAME_SYSNAME == "Windows":
         ctypedef unsigned char     gc_uint8
         ctypedef unsigned short    gc_uint16
@@ -30,7 +29,7 @@ cdef extern from "gorilla/common/gc_types.h":
 
     ctypedef gc_int32 gc_result
 
-    DEF GC_FALSE = 0
-    DEF GC_TRUE = 1
-    DEF GC_SUCCESS = 1
-    DEF GC_ERROR_GENERIC = -1
+    cdef int GC_FALSE
+    cdef int GC_TRUE
+    cdef int GC_SUCCESS
+    cdef int GC_ERROR_GENERIC

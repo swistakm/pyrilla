@@ -1,10 +1,10 @@
 include "h_gc_types.pxi"
 
 cdef extern from 'gorilla/common/gc_thread.h':
-    DEF GC_THREAD_PRIORITY_NORMAL = 0
-    DEF GC_THREAD_PRIORITY_LOW = 1
-    DEF GC_THREAD_PRIORITY_HIGH = 2
-    DEF GC_THREAD_PRIORITY_HIGHEST = 3
+    cdef int GC_THREAD_PRIORITY_NORMAL
+    cdef int GC_THREAD_PRIORITY_LOW
+    cdef int GC_THREAD_PRIORITY_HIGH
+    cdef int GC_THREAD_PRIORITY_HIGHEST
 
     ctypedef gc_int32 (*gc_ThreadFunc)(void* in_context);
 
