@@ -1,14 +1,25 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
+
 from distutils.core import setup, Extension
 
 from Cython.Distutils import build_ext
 
 EXTENSIONS_INCLUDE_DIRS = ["gorilla-audio/include"]
-EXTENSIONS_EXTRA_OBJECTS = [
-    "gorilla-audio/bin/osx/Release/libgorilla.a",
-    "/System/Library/Frameworks/OpenAL.framework/OpenAL",
-]
+
+if sys.platform in ('cygwin', 'win32'):
+    EXTENSIONS_EXTRA_OBJECTS = [
+        "gorilla-audio/bin/win32/Release/libgorilla.a",
+    ]
+    LIBRARIES = ['ole32', 'oleaut32']
+
+elif sys.platform == 'darwin':
+    EXTENSIONS_EXTRA_OBJECTS = [
+        "gorilla-audio/bin/osx/Release/libgorilla.a",
+        "/System/Library/Frameworks/OpenAL.framework/OpenAL",
+    ]
+    LIBRARIES = []
 
 
 def get_version(version_tuple):
@@ -57,6 +68,7 @@ setup(
             "pyrilla.ga", ["extensions/ga.pyx"],
             include_dirs=EXTENSIONS_INCLUDE_DIRS,
             extra_objects=EXTENSIONS_EXTRA_OBJECTS,
+            libraries=LIBRARIES,
         ),
     ],
 
