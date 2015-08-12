@@ -65,7 +65,7 @@ setup(
     cmdclass={'build_ext': build_ext},
     ext_modules=[
         Extension(
-            "pyrilla.ga", ["extensions/ga.pyx"],
+            "pyrilla.internal", ["extensions/internal.pyx"],
             include_dirs=EXTENSIONS_INCLUDE_DIRS,
             extra_objects=EXTENSIONS_EXTRA_OBJECTS,
             libraries=LIBRARIES,

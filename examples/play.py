@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from sys import argv
-from pyrilla import ga
+from pyrilla import internal
 
 
 def main():
-#    ga.hello()
-
     if len(argv) != 2:
         print """
         usage: program filename"
@@ -16,7 +14,7 @@ def main():
         ext = filename.rpartition('.')[2]
         print("will load %s as %s" % (filename, ext))
 
-        ga.play(filename, ext)
+        internal.play(filename, ext)
 
 
 if __name__ == "__main__":
