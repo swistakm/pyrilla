@@ -6,10 +6,10 @@ cdef extern from "gorilla/gau.h":
     cdef gau_Manager* manager_create "gau_manager_create" ()
 
     cdef gau_Manager* manager_create_custom "gau_manager_create_custom" (
-        gc_int32 in_devType,
-        gc_int32 in_threadPolicy,
-        gc_int32 in_numBuffers,
-        gc_int32 in_bufferSamples
+        int32 in_devType,
+        int32 in_threadPolicy,
+        int32 in_numBuffers,
+        int32 in_bufferSamples
     )
 
     cdef void manager_update "gau_manager_update" (gau_Manager* in_mgr)
@@ -21,8 +21,8 @@ cdef extern from "gorilla/gau.h":
     cdef ga_DataSource* data_source_create_file "gau_data_source_create_file" (const char* in_filename)
     cdef ga_DataSource* data_source_create_file_arc "gau_data_source_create_file_arc" (
         const char* in_filename,
-        gc_int32 in_offset,
-        gc_int32 in_size
+        int32 in_offset,
+        int32 in_size
     )
 
     cdef ga_DataSource* data_source_create_memory "gau_data_source_create_memory" (
@@ -40,7 +40,7 @@ cdef extern from "gorilla/gau.h":
     cdef ga_SampleSource* sample_source_create_buffered "gau_sample_source_create_buffered" (
         ga_StreamManager* in_mgr,
         ga_SampleSource* in_sampleSrc,
-        gc_int32 in_bufferSamples
+        int32 in_bufferSamples
     )
 
     cdef ga_SampleSource* sample_source_create_sound "gau_sample_source_create_sound" (
@@ -53,13 +53,13 @@ cdef extern from "gorilla/gau.h":
 
     cdef void sample_source_loop_set "gau_sample_source_loop_set" (
         gau_SampleSourceLoop* in_sampleSrc,
-        gc_int32 in_triggerSample,
-        gc_int32 in_targetSample
+        int32 in_triggerSample,
+        int32 in_targetSample
     )
 
     cdef void sample_source_loop_clear "gau_sample_source_loop_clear" (gau_SampleSourceLoop* in_sampleSrc)
 
-    cdef gc_int32 sample_source_loop_count "gau_sample_source_loop_count" (
+    cdef int32 sample_source_loop_count "gau_sample_source_loop_count" (
         gau_SampleSourceLoop* in_sampleSrc
     )
 

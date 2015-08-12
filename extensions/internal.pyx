@@ -13,7 +13,7 @@ initialize()
 
 
 cdef setFlagAndDestroyOnFinish(ga.ga_Handle* in_handle, void* in_context):
-    cdef ga.gc_int32* flag = <ga.gc_int32*>(in_context)
+    cdef ga.int32* flag = <ga.int32*>(in_context)
 
     flag[0] = 1
     ga.handle_destroy(in_handle)
@@ -31,8 +31,8 @@ def play(filename, ext):
     cdef ga.ga_Handle* handle
     cdef gau.gau_SampleSourceLoop* loopSrc = NULL
     cdef gau.gau_SampleSourceLoop** pLoopSrc = &loopSrc
-    cdef ga.gc_int32 loop = 0
-    cdef ga.gc_int32 quit = 0
+    cdef ga.int32 loop = 0
+    cdef ga.int32 quit = 0
 
 
     mgr = gau.manager_create()

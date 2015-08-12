@@ -1,15 +1,15 @@
 cdef extern from "gorilla/ga.h":
     ctypedef struct ga_Format:
-        gc_int32 sampleRate
-        gc_int32 bitsPerSample
-        gc_int32 numChannels
+        int32 sampleRate
+        int32 bitsPerSample
+        int32 numChannels
 
     ctypedef struct ga_Device
     ctypedef struct ga_DataSource
     ctypedef struct ga_SampleSource
 
     ctypedef void (*tOnSeekFunc)(
-        gc_int32 in_sample, gc_int32 in_delta, void* in_seekContext
+        int32 in_sample, int32 in_delta, void* in_seekContext
     )
     ctypedef struct ga_Memory
     ctypedef struct ga_Sound
