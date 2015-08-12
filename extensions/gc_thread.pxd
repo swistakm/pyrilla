@@ -1,12 +1,14 @@
 include "h_gc_types.pxi"
 
 cdef extern from 'gorilla/common/gc_thread.h':
-    cdef int GC_THREAD_PRIORITY_NORMAL
-    cdef int GC_THREAD_PRIORITY_LOW
-    cdef int GC_THREAD_PRIORITY_HIGH
-    cdef int GC_THREAD_PRIORITY_HIGHEST
+    # constants declared with #define in prefixless versions
+    cdef int THREAD_PRIORITY_NORMAL "GC_THREAD_PRIORITY_NORMAL"
+    cdef int THREAD_PRIORITY_LOW "GC_THREAD_PRIORITY_LOW"
+    cdef int THREAD_PRIORITY_HIGH "GC_THREAD_PRIORITY_HIGH"
+    cdef int THREAD_PRIORITY_HIGHEST "GC_THREAD_PRIORITY_HIGHEST"
 
     ctypedef int32 (*gc_ThreadFunc)(void* in_context);
+    ctypedef gc_ThreadFunc ThreadFunc "gc_ThreadFunc"  # prefixless
 
     ctypedef struct gc_Thread:
         gc_ThreadFunc threadFunc
@@ -15,9 +17,10 @@ cdef extern from 'gorilla/common/gc_thread.h':
         int32 id
         int32 priority
         int32 stackSize
+    ctypedef gc_Thread Thread "gc_Thread"  # prefixless
 
-    cdef gc_Thread* thread_create "gc_thread_create" (
-        gc_ThreadFunc in_threadFunc,
+    cdef Thread* thread_create "gc_thread_create" (
+        ThreadFunc in_threadFunc,
         void* in_context,
         int32 in_priority,
         int32 in_stackSize

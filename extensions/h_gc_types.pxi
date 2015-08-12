@@ -29,7 +29,8 @@ cdef extern from "gorilla/common/gc_types.h":
 
     ctypedef int32 result "gc_result"
 
-    cdef int GC_FALSE
-    cdef int GC_TRUE
-    cdef int GC_SUCCESS
-    cdef int GC_ERROR_GENERIC
+    cdef int FALSE "GC_FALSE"
+    cdef int TRUE "GC_TRUE"
+    cdef int SUCCESS "GC_SUCCESS"
+    cdef int ERROR_GENERIC "GC_ERROR_GENERIC"
+

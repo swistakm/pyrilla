@@ -1,7 +1,9 @@
+from cython.operator cimport dereference as deref
+from python_ref cimport Py_DECREF, Py_INCREF
+
 cimport ga
 cimport gau
 cimport gc_common
-cimport gc_thread
 
 def initialize():
     gc_common.initialize(NULL)
@@ -11,65 +13,65 @@ def initialize():
 # note: no need to case for shutdown
 initialize()
 
+cdef gau.Manager* global_manager = gau.manager_create()
+cdef gau.Mixer* global_mixer = gau.manager_mixer(global_manager)
 
-cdef setFlagAndDestroyOnFinish(ga.ga_Handle* in_handle, void* in_context):
-    cdef ga.int32* flag = <ga.int32*>(in_context)
+def update():
+    gau.manager_update(global_manager)
 
-    flag[0] = 1
+
+cdef on_finish_callback(ga.Handle* in_handle, void* in_context):
+    (<object>in_context)()
+    print "after callback"
     ga.handle_destroy(in_handle)
 
 
-def play(filename, ext):
-    """ example sound play
-    :param filename:
-    :param ext:
-    :return:
-    """
-    cdef gau.Manager* mgr
-
-
-    cdef ga.ga_Mixer* mixer
-    cdef ga.ga_Sound* sound
-    cdef ga.ga_Handle* handle
-    cdef gau.SampleSourceLoop* loopSrc = NULL
-    cdef gau.SampleSourceLoop** pLoopSrc = &loopSrc
-    cdef ga.int32 loop = 0
-    cdef ga.int32 quit = 0
-
-
-    mgr = gau.manager_create()
-    mixer = gau.manager_mixer(mgr)
-
-    if not loop:
-        pLoopSrc = NULL
-
-    sound = gau.load_sound_file(filename, ext)
-
-    handle = gau.create_handle_sound(
-        mixer, sound, <ga.ga_FinishCallback>&setFlagAndDestroyOnFinish, &quit, pLoopSrc)
-    ga.handle_play(handle)
-
-    while not quit:
-        gau.manager_update(mgr)
-
-        print(
-            "%s / %s" % (
-                ga.handle_tell(handle, ga.GA_TELL_PARAM_CURRENT),
-                ga.handle_tell(handle, ga.GA_TELL_PARAM_TOTAL)
-            )
-        )
-        gc_thread.thread_sleep(1)
-
-    ga.sound_release(sound)
-    gau.manager_destroy(mgr)
+ctypedef struct CallbackContext:
+    void* callback
+    void* sound
 
 
 cdef class Sound(object):
-   cdef ga.ga_Sound* sound
+    cdef ga.Sound* sound
+    cdef ga.Handle* handle
 
-   def __init__(self):
-       pass
+    def __cinit__(self):
+        self.sound = NULL
+        self.handle = NULL
 
-   def __del__(self):
-       """Release sound (gorilla uses refcounting for that)"""
-       ga.sound_release(self.sound)
+    def __init__(
+        self,
+        filename,
+        ext,
+        stream=False,
+    ):
+        if not stream:
+            self.sound = gau.load_sound_file(filename, ext)
+        else:
+            raise NotImplementedError("streams ntt implemented yet")
+
+    def play(self, on_finish=None):
+        cdef ga.Handle* handle
+
+        if on_finish:
+            handle = gau.create_handle_sound(
+               global_mixer,
+               self.sound,
+               <ga.FinishCallback>&on_finish_callback,
+               <void*>on_finish,
+               NULL
+            )
+        else:
+            handle = gau.create_handle_sound(
+               global_mixer,
+               self.sound,
+               <ga.FinishCallback>&gau.on_finish_destroy,
+               NULL,
+               NULL
+            )
+
+        ga.handle_play(handle)
+
+    def __del__(self):
+        """Release sound (gorilla uses refcounting for that)"""
+        ga.sound_release(self.sound)
