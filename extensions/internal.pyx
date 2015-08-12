@@ -25,12 +25,14 @@ def play(filename, ext):
     :param ext:
     :return:
     """
-    cdef gau.gau_Manager* mgr
+    cdef gau.Manager* mgr
+
+
     cdef ga.ga_Mixer* mixer
     cdef ga.ga_Sound* sound
     cdef ga.ga_Handle* handle
-    cdef gau.gau_SampleSourceLoop* loopSrc = NULL
-    cdef gau.gau_SampleSourceLoop** pLoopSrc = &loopSrc
+    cdef gau.SampleSourceLoop* loopSrc = NULL
+    cdef gau.SampleSourceLoop** pLoopSrc = &loopSrc
     cdef ga.int32 loop = 0
     cdef ga.int32 quit = 0
 
