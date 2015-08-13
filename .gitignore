@@ -56,6 +56,12 @@ docs/_build/
 # PyBuilder
 target/
 
-
 # extensions sources built with Cython
 extensions/*.c
+
+# built lib
+pyrilla/*.dll
+pyrilla/*.so
+
+# ide
+.idea
