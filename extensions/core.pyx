@@ -53,7 +53,7 @@ cdef class Voice(object):
     def __cinit__(
             self,
             Sound sound,
-            object on_finish,
+            object on_finish=None,
             int loop=False,
             Mixer mixer=None,
     ):
@@ -62,7 +62,6 @@ cdef class Voice(object):
         self.sound = sound
         self.mixer = mixer
         self.loop = loop
-        self.handle = NULL
 
         if on_finish:
             context = CallbackContext(on_finish, self.sound)
@@ -80,7 +79,7 @@ cdef class Voice(object):
             )
 
         else:
-            handle = gau.create_handle_sound(
+            self.handle = gau.create_handle_sound(
                global_mixer,
                self.sound.sound,
                <ga.FinishCallback>&gau.on_finish_destroy,
@@ -91,12 +90,25 @@ cdef class Voice(object):
     def play(self):
         ga.handle_play(self.handle)
 
+    @property
+    def playing(self):
+        return bool(ga.handle_playing(self.handle))
+
     def stop(self):
         ga.handle_stop(self.handle)
+
+    @property
+    def stopped(self):
+        return bool(ga.handle_stopped(self.handle))
 
     def __del__(self):
         ga.handle_destroy(self.handle)
 
+    def toggle(self):
+        if self.playing:
+            self.stop()
+        else:
+            self.play()
 
 cdef class Sound(object):
     cdef ga.Sound* sound
@@ -108,7 +120,7 @@ cdef class Sound(object):
         if not stream:
             self.sound = gau.load_sound_file(filename, ext)
         else:
-            raise NotImplementedError("streams ntt implemented yet")
+            raise NotImplementedError("streams not implemented yet")
 
     def play(self, on_finish=None):
         cdef Voice voice
