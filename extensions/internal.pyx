@@ -1,5 +1,5 @@
 from cython.operator cimport dereference as deref
-from python_ref cimport Py_DECREF, Py_INCREF
+from cpython cimport Py_DECREF, Py_INCREF
 
 cimport ga
 cimport gau
@@ -21,14 +21,21 @@ def update():
 
 
 cdef on_finish_callback(ga.Handle* in_handle, void* in_context):
-    (<object>in_context)()
-    print "after callback"
+    cdef CallbackContext context = <CallbackContext> in_context
+    context.callback(context.sound)
+    # note: it was casted on void* so we need to manually decrease
+    #       reference counter
+    Py_DECREF(context)
     ga.handle_destroy(in_handle)
 
 
-ctypedef struct CallbackContext:
-    void* callback
-    void* sound
+cdef class CallbackContext(object):
+    cdef object callback
+    cdef Sound sound
+
+    def __cinit__(self, object callback, Sound sound):
+        self.callback = callback
+        self.sound = sound
 
 
 cdef class Sound(object):
@@ -52,13 +59,20 @@ cdef class Sound(object):
 
     def play(self, on_finish=None):
         cdef ga.Handle* handle
+        cdef CallbackContext context
 
         if on_finish:
+            context = CallbackContext(on_finish, self)
+
+            # note: we are going to cast on void* so we need to manually
+            #       control reference counters
+            Py_INCREF(context)
+
             handle = gau.create_handle_sound(
                global_mixer,
                self.sound,
                <ga.FinishCallback>&on_finish_callback,
-               <void*>on_finish,
+               <void*>context,
                NULL
             )
         else:

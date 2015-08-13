@@ -3,8 +3,9 @@ from sys import argv
 from pyrilla import internal
 from time import sleep
 
-def finished(*args):
-    print("finished")
+def finished(sound):
+    print("finished:", sound)
+    quit()
 
 go_on = False
 
