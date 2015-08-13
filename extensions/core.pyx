@@ -110,6 +110,36 @@ cdef class Voice(object):
         else:
             self.play()
 
+    property pitch:
+        def __get__(self):
+            cdef ga.float32 value
+
+            ga.handle_getParamf(self.handle, ga.HANDLE_PARAM_PITCH, &value)
+            return value
+
+        def __set__(self, ga.float32 value):
+            ga.handle_setParamf(self.handle, ga.HANDLE_PARAM_PITCH, value)
+
+    property gain:
+        def __get__(self):
+            cdef ga.float32 value
+
+            ga.handle_getParamf(self.handle, ga.HANDLE_PARAM_GAIN, &value)
+            return value
+
+        def __set__(self, ga.float32 value):
+            ga.handle_setParamf(self.handle, ga.HANDLE_PARAM_GAIN, value)
+
+    property pan:
+        def __get__(self):
+            cdef ga.float32 value
+
+            ga.handle_getParamf(self.handle, ga.HANDLE_PARAM_PAN, &value)
+            return value
+
+        def __set__(self, ga.float32 value):
+            ga.handle_setParamf(self.handle, ga.HANDLE_PARAM_PAN, value)
+
 cdef class Sound(object):
     cdef ga.Sound* sound
 
