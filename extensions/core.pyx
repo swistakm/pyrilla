@@ -1,9 +1,9 @@
-from cython.operator cimport dereference as deref
 from cpython cimport Py_DECREF, Py_INCREF
 
 cimport ga
 cimport gau
 cimport gc_common
+cimport gc_thread
 
 def initialize():
     gc_common.initialize(NULL)
@@ -13,11 +13,8 @@ def initialize():
 # note: no need to case for shutdown
 initialize()
 
-cdef gau.Manager* global_manager = gau.manager_create()
-cdef gau.Mixer* global_mixer = gau.manager_mixer(global_manager)
-
 def update():
-    gau.manager_update(global_manager)
+    default_manager.update()
 
 
 cdef on_finish_callback(ga.Handle* in_handle, void* in_context):
@@ -38,17 +35,58 @@ cdef class CallbackContext(object):
         self.sound = sound
 
 
+cdef class Manager(object):
+    # c types
+    cdef gau.Manager* p_manager
+    DEF DEFAULT_BUFFERS_NUMBER = 4
+    DEF DEFAULT_BUFFER_SAMPLES = 512
+
+    def __cinit__(
+            self,
+            int device=ga.DEVICE_TYPE_DEFAULT,
+            int thread_policy=gau.THREAD_POLICY_SINGLE,
+            int buffers_number=DEFAULT_BUFFERS_NUMBER,
+            int buffer_samples=DEFAULT_BUFFER_SAMPLES
+    ):
+        # note: we do not use gau.manager_create()
+        #       instead of that we use the same defaults
+        self.p_manager = gau.manager_create_custom(
+            device,
+            thread_policy,
+            buffers_number,
+            buffer_samples,
+        )
+
+    def update(self):
+        gau.manager_update(self.p_manager)
+
+    def __del__(self):
+        gau.manager_destroy(self.p_manager)
+
+
 cdef class Mixer(object):
-    pass
+    # c types
+    cdef gau.Mixer* p_mixer
+    # cython objects
+    cdef Manager manager
+
+    def __cinit__(self, Manager manager):
+        self.manager = manager
+        self.p_mixer = gau.manager_mixer(manager.p_manager)
+
+    def __del__(self):
+        ga.mixer_destroy(self.p_mixer)
 
 
 cdef class Voice(object):
-    cdef Sound sound
+    # c types
     cdef int loop
-    cdef Mixer mixer
-
     cdef gau.SampleSourceLoop* loop_src
     cdef ga.Handle* handle
+
+    # cython types
+    cdef Sound sound
+    cdef Mixer mixer
 
     def __cinit__(
             self,
@@ -60,8 +98,9 @@ cdef class Voice(object):
         cdef CallbackContext context
 
         self.sound = sound
-        self.mixer = mixer
         self.loop = loop
+
+        self.mixer = mixer or default_mixer
 
         if on_finish:
             context = CallbackContext(on_finish, self.sound)
@@ -71,7 +110,7 @@ cdef class Voice(object):
             Py_INCREF(context)
 
             self.handle = gau.create_handle_sound(
-               global_mixer,
+               self.mixer.p_mixer,
                self.sound.sound,
                <ga.FinishCallback>&on_finish_callback,
                <void*>context,
@@ -80,7 +119,7 @@ cdef class Voice(object):
 
         else:
             self.handle = gau.create_handle_sound(
-               global_mixer,
+               self.mixer.p_mixer,
                self.sound.sound,
                <ga.FinishCallback>&gau.on_finish_destroy,
                NULL,
@@ -152,10 +191,10 @@ cdef class Sound(object):
         else:
             raise NotImplementedError("streams not implemented yet")
 
-    def play(self, on_finish=None):
+    def play(self, on_finish=None, mixer=None):
         cdef Voice voice
 
-        voice = Voice(self, on_finish, 0, None)
+        voice = Voice(self, on_finish, 0, mixer)
         voice.play()
 
         return voice
@@ -163,3 +202,15 @@ cdef class Sound(object):
     def __del__(self):
         """Release sound (gorilla uses refcounting for that)"""
         ga.sound_release(self.sound)
+
+# default manager and mixer
+default_manager = Manager()
+default_mixer = Mixer(default_manager)
+
+DEVICE_XAUDIO2 = ga.DEVICE_TYPE_XAUDIO2
+DEVICE_DIRECTSOUND = ga.DEVICE_TYPE_DIRECTSOUND
+DEVICE_OPENAL = ga.DEVICE_TYPE_OPENAL
+DEVICE_DEFAULT = ga.DEVICE_TYPE_DEFAULT
+
+THREAD_SINGLE = gau.THREAD_POLICY_SINGLE
+THREAD_MULTI = gau.THREAD_POLICY_MULTI

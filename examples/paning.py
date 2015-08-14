@@ -32,7 +32,6 @@ def file_handle(filename, ext):
             core.update()
             time.sleep(0.001)
 
-
     except KeyboardInterrupt:
         print("interrupted")
 
