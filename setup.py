@@ -33,6 +33,7 @@ try:
 
     def read_md(f):
         return convert(f, 'rst')
+
 except ImportError:
     convert = None
     print(
@@ -80,5 +81,17 @@ setup(
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
+
+        'Programming Language :: Cython',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2 :: Only',
+
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+
+        'Topic :: Multimedia :: Sound/Audio',
+        'Topic :: Multimedia :: Sound/Audio :: Mixers',
+        'Topic :: Multimedia :: Sound/Audio :: Players',
+        'Topic :: Games/Entertainment',
     ],
 )
