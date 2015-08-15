@@ -9,6 +9,7 @@ def file_handle(filename, ext):
     # note: low buffer settings that drop audio quality
     #       for ilustratory reasons
     manager = core.Manager(
+        device=core.DEVICE_DEFAULT,
         thread_policy=core.THREAD_MULTI,
     )
     mixer = core.Mixer(manager)

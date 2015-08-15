@@ -10,7 +10,6 @@ def finished(sound):
 
 
 def file_handle(filename, ext):
-    print("will load %s as %s" % (filename, ext))
     sound = core.Sound(filename, ext)
     sound.play(finished)
 
