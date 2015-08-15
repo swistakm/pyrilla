@@ -3,7 +3,20 @@ from cpython cimport Py_DECREF, Py_INCREF
 cimport ga
 cimport gau
 cimport gc_common
-cimport gc_thread
+
+
+class SoundIOError(IOError):
+    """
+    Raised when gorilla-audio can not load the sound from some reason
+    (e.g. wrong format, file does not exist)
+    """
+
+
+class DeviceNotSupportedError(RuntimeError):
+    """
+    Raised on attempt to access not supported device type
+    """
+
 
 def initialize():
     gc_common.initialize(NULL)
@@ -19,6 +32,7 @@ def update():
 
 cdef on_finish_callback(ga.Handle* in_handle, void* in_context):
     cdef CallbackContext context = <CallbackContext> in_context
+
     context.callback(context.sound)
     # note: it was casted on void* so we need to manually decrease
     #       reference counter
@@ -27,6 +41,7 @@ cdef on_finish_callback(ga.Handle* in_handle, void* in_context):
 
 
 cdef class CallbackContext(object):
+    # python objects
     cdef object callback
     cdef Sound sound
 
@@ -37,7 +52,7 @@ cdef class CallbackContext(object):
 
 cdef class Manager(object):
     # c types
-    cdef gau.Manager* p_manager
+    cdef gau.gau_Manager* p_manager
     DEF DEFAULT_BUFFERS_NUMBER = 4
     DEF DEFAULT_BUFFER_SAMPLES = 512
 
@@ -50,12 +65,16 @@ cdef class Manager(object):
     ):
         # note: we do not use gau.manager_create()
         #       instead of that we use the same defaults
-        self.p_manager = gau.manager_create_custom(
+        #       as this function
+        self.p_manager = <gau.Manager*> gau.manager_create_custom(
             device,
             thread_policy,
             buffers_number,
             buffer_samples,
         )
+
+        if gau.manager_device(self.p_manager) == NULL:
+            raise DeviceNotSupportedError("This device is not supoprted")
 
     def update(self):
         gau.manager_update(self.p_manager)
@@ -67,7 +86,8 @@ cdef class Manager(object):
 cdef class Mixer(object):
     # c types
     cdef gau.Mixer* p_mixer
-    # cython objects
+
+    # python objects
     cdef Manager manager
 
     def __cinit__(self, Manager manager):
@@ -81,10 +101,10 @@ cdef class Mixer(object):
 cdef class Voice(object):
     # c types
     cdef int loop
-    cdef gau.SampleSourceLoop* loop_src
-    cdef ga.Handle* handle
+    cdef gau.SampleSourceLoop* p_loop_src
+    cdef ga.Handle* p_handle
 
-    # cython types
+    # python objects
     cdef Sound sound
     cdef Mixer mixer
 
@@ -109,39 +129,39 @@ cdef class Voice(object):
             #       control reference counters
             Py_INCREF(context)
 
-            self.handle = gau.create_handle_sound(
+            self.p_handle = gau.create_handle_sound(
                self.mixer.p_mixer,
-               self.sound.sound,
+               self.sound.p_sound,
                <ga.FinishCallback>&on_finish_callback,
                <void*>context,
-               &self.loop_src if self.loop else NULL
+               &self.p_loop_src if self.loop else NULL
             )
 
         else:
-            self.handle = gau.create_handle_sound(
+            self.p_handle = gau.create_handle_sound(
                self.mixer.p_mixer,
-               self.sound.sound,
+               self.sound.p_sound,
                <ga.FinishCallback>&gau.on_finish_destroy,
                NULL,
-               &self.loop_src if self.loop else NULL
+               &self.p_loop_src if self.loop else NULL
             )
 
     def play(self):
-        ga.handle_play(self.handle)
+        ga.handle_play(self.p_handle)
 
     @property
     def playing(self):
-        return bool(ga.handle_playing(self.handle))
+        return bool(ga.handle_playing(self.p_handle))
 
     def stop(self):
-        ga.handle_stop(self.handle)
+        ga.handle_stop(self.p_handle)
 
     @property
     def stopped(self):
-        return bool(ga.handle_stopped(self.handle))
+        return bool(ga.handle_stopped(self.p_handle))
 
     def __del__(self):
-        ga.handle_destroy(self.handle)
+        ga.handle_destroy(self.p_handle)
 
     def toggle(self):
         if self.playing:
@@ -153,43 +173,47 @@ cdef class Voice(object):
         def __get__(self):
             cdef ga.float32 value
 
-            ga.handle_getParamf(self.handle, ga.HANDLE_PARAM_PITCH, &value)
+            ga.handle_getParamf(self.p_handle, ga.HANDLE_PARAM_PITCH, &value)
             return value
 
         def __set__(self, ga.float32 value):
-            ga.handle_setParamf(self.handle, ga.HANDLE_PARAM_PITCH, value)
+            ga.handle_setParamf(self.p_handle, ga.HANDLE_PARAM_PITCH, value)
 
     property gain:
         def __get__(self):
             cdef ga.float32 value
 
-            ga.handle_getParamf(self.handle, ga.HANDLE_PARAM_GAIN, &value)
+            ga.handle_getParamf(self.p_handle, ga.HANDLE_PARAM_GAIN, &value)
             return value
 
         def __set__(self, ga.float32 value):
-            ga.handle_setParamf(self.handle, ga.HANDLE_PARAM_GAIN, value)
+            ga.handle_setParamf(self.p_handle, ga.HANDLE_PARAM_GAIN, value)
 
     property pan:
         def __get__(self):
             cdef ga.float32 value
 
-            ga.handle_getParamf(self.handle, ga.HANDLE_PARAM_PAN, &value)
+            ga.handle_getParamf(self.p_handle, ga.HANDLE_PARAM_PAN, &value)
             return value
 
         def __set__(self, ga.float32 value):
-            ga.handle_setParamf(self.handle, ga.HANDLE_PARAM_PAN, value)
+            ga.handle_setParamf(self.p_handle, ga.HANDLE_PARAM_PAN, value)
+
 
 cdef class Sound(object):
-    cdef ga.Sound* sound
+    cdef ga.Sound* p_sound
 
     def __cinit__(self):
-        self.sound = NULL
+        self.p_sound = NULL
 
     def __init__(self, filename, ext, stream=False):
         if not stream:
-            self.sound = gau.load_sound_file(filename, ext)
+            self.p_sound = gau.load_sound_file(filename, ext)
         else:
             raise NotImplementedError("streams not implemented yet")
+
+        if self.p_sound == NULL:
+            raise SoundIOError("could not load sound file %s as %s" % (filename, ext))
 
     def play(self, on_finish=None, mixer=None):
         cdef Voice voice
@@ -200,8 +224,8 @@ cdef class Sound(object):
         return voice
 
     def __del__(self):
-        """Release sound (gorilla uses refcounting for that)"""
-        ga.sound_release(self.sound)
+        """Release sound (gorilla-audio uses refcounting for that)"""
+        ga.sound_release(self.p_sound)
 
 # default manager and mixer
 default_manager = Manager()
