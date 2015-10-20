@@ -9,10 +9,16 @@ from Cython.Distutils import build_ext
 EXTENSIONS_INCLUDE_DIRS = ["gorilla-audio/include"]
 
 if sys.platform in ('cygwin', 'win32'):
-    EXTENSIONS_EXTRA_OBJECTS = [
-        "gorilla-audio/bin/win32/Release/libgorilla.a",
-    ]
     LIBRARIES = ['ole32', 'oleaut32']
+
+    if sys.platform == 'cygwin':
+        EXTENSIONS_EXTRA_OBJECTS = [
+            "gorilla-audio/bin/win32/Release/libgorilla.a",
+        ]
+    else:
+        EXTENSIONS_EXTRA_OBJECTS = [
+            "gorilla-audio/bin/win32/Release/gorilla.lib",
+        ]
 
 elif sys.platform == 'darwin':
     EXTENSIONS_EXTRA_OBJECTS = [
@@ -49,7 +55,6 @@ version_line = list(filter(lambda l: l.startswith('VERSION'), open(init)))[0]
 
 VERSION = get_version(eval(version_line.split('=')[-1]))
 README = os.path.join(os.path.dirname(__file__), 'README.md')
-
 
 setup(
     name='pyrilla',
