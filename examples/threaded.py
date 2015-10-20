@@ -7,7 +7,7 @@ from base import main
 
 def finished(sound):
     print "sound %s finished, exiting" % sound
-    exit(1)
+    exit()
 
 
 def file_handle(filename, ext):
@@ -22,8 +22,9 @@ def file_handle(filename, ext):
 
     try:
         while True:
-            # note: we use multiple thread policy so no need for manual
-            #       update on manager. We can sleep indifinitely
+            # note: despite mixing is done in separate thread there is need
+            #       for updates from time to time for callbacks to take effect
+            manager.update()
             sleep(1)
 
     except KeyboardInterrupt:
