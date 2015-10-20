@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 from pyrilla import core
 
 from base import main, update_till_interrupt
 
 again = 0
+
 
 def file_handle(filename, ext):
     sound = core.Sound(filename, ext)

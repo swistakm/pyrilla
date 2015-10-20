@@ -5,9 +5,12 @@ from pyrilla import core
 from base import main
 
 
+def finished(sound):
+    print "sound %s finished, exiting" % sound
+    exit(1)
+
+
 def file_handle(filename, ext):
-    # note: low buffer settings that drop audio quality
-    #       for ilustratory reasons
     manager = core.Manager(
         device=core.DEVICE_DEFAULT,
         thread_policy=core.THREAD_MULTI,
@@ -15,17 +18,17 @@ def file_handle(filename, ext):
     mixer = core.Mixer(manager)
 
     sound = core.Sound(filename, ext)
-    voice = core.Voice(sound, loop=True, mixer=mixer)
-
-    voice.play()
+    sound.play(on_finish=finished, mixer=mixer)
 
     try:
         while True:
             # note: we use multiple thread policy so no need for manual
             #       update on manager. We can sleep indifinitely
-            sleep(1.001)
+            sleep(1)
+
     except KeyboardInterrupt:
         print("interrupted")
+
 
 if __name__ == "__main__":
     main(file_handle)

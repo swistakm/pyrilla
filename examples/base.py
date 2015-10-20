@@ -8,7 +8,7 @@ from pyrilla import core
 def main(file_handle):
     if len(argv) != 2:
         print """
-        usage: program filename"
+        usage: program filename
         """
         exit(1)
 

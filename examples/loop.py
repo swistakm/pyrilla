@@ -5,6 +5,7 @@ from base import main, update_till_interrupt
 
 again = 0
 
+
 def file_handle(filename, ext):
     sound = core.Sound(filename, ext)
     voice = core.Voice(sound, loop=True)
