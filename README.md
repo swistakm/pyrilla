@@ -12,6 +12,49 @@ It is built with cython and its API is inspired by part of great but
 unmantained [bacon](https://github.com/aholkner/bacon) game engine.
 
 
+# usage
+
+The easiest way to play single sound is to use `Sound` class:
+
+```!python
+from pyrilla import core
+
+def finished(sound):
+    print("sound %s finished playing" % sound)
+    quit()
+
+
+# note: sound file extension must be explicitely provided
+sound = core.Sound("soundfile.ogg", "ogg")
+# optional callback will be called when sound finishes to play
+sound.play(finished)
+
+while True:
+    # update internal state of default audio manager and mixer
+    # this mixes all currently played sounds, pushes buffers etc.
+    core.update()
+```
+
+To play looped audio you need to use `Voice` instance that can be
+created from existing sound.
+
+```!python
+from pyrilla import core
+
+# note: sound file extension must be explicitely provided
+sound = core.Sound("soundfile.ogg", "ogg")
+# optional callback will be called when sound finishes to play
+sound = core.Sound(filename, ext)
+voice = core.Voice(sound, loop=True)
+voice.play()
+
+while True:
+    # update internal state of default audio manager and mixer
+    # this mixes all currently played sounds, pushes buffers etc.
+    core.update()
+```
+
+
 # building
 
 Building pyrilla prerequisites:
