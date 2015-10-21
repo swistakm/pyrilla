@@ -245,7 +245,6 @@ cdef class Voice(object):
         Voice gain as a ``[0.0, 1.0]`` float value.
         """
         def __get__(self):
-            """fab"""
             cdef ga.float32 value
 
             ga.handle_getParamf(self.p_handle, ga.HANDLE_PARAM_GAIN, &value)
