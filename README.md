@@ -16,7 +16,7 @@ unmantained [bacon](https://github.com/aholkner/bacon) game engine.
 
 The easiest way to play single sound is to use `Sound` class:
 
-```!python
+```python
 from pyrilla import core
 
 def finished(sound):
@@ -38,21 +38,20 @@ while True:
 To play looped audio you need to use `Voice` instance that can be
 created from existing sound.
 
-```!python
+
+```python
 from pyrilla import core
 
-# note: sound file extension must be explicitely provided
 sound = core.Sound("soundfile.ogg", "ogg")
-# optional callback will be called when sound finishes to play
-sound = core.Sound(filename, ext)
 voice = core.Voice(sound, loop=True)
 voice.play()
 
 while True:
-    # update internal state of default audio manager and mixer
-    # this mixes all currently played sounds, pushes buffers etc.
     core.update()
 ```
+
+For more features like custom managers/mixers, voice control (pitch, gain, pan)
+or stop/play see code samples in `examples` directory of this repo.
 
 
 # building
