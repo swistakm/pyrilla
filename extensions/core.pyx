@@ -99,6 +99,49 @@ cdef class Mixer(object):
 
 
 cdef class Voice(object):
+    """
+    ``Voice()`` class represents single playback of given sound. There may be
+    many ``Voice()`` instances  for single sound playing at any time but one
+    file/stream should be (mostly) represented by only single ``Sound()``
+    object.
+
+    Voice's pitch, gain and pan can be controlled by adequate attributes.
+    It also can be stopped/played at any time.
+
+    Looping parameter changes the life-cycle of a voice handle:
+
+    * ``loop=False``: it is a single one-shot voice that when finished
+      cannot be replayed again. ``on_finish`` callback can be attached
+      to such sound and it will be fired when voice ends to play.
+    * ``loop=True``: voice loops indefinitely. ``on_finish`` callback will
+      be never fired.
+
+    Args:
+
+        sound (pyrilla.Sound): sound instance as a data source of voice.
+        on_finish (callable): callback to be fired when voice finishes
+            to play (only if ``loop=False``). Callback must accept single
+            argument that is sound instance.
+        loop (bool): set to ``True`` if voice should be looped indefinitely.
+        mixer (pyrilla.Mixer): Mixer that should be used to play new
+            voice. ``None`` value means the default mixer created
+            on module nitialization.
+
+    Example:
+
+    .. code-block:: python
+
+        from pyrilla import core
+
+        sound = core.Sound("soundfile.ogg", "ogg")
+        voice = core.Voice(sound, loop=True)
+        voice.play()
+
+        while True:
+            # update internal state of default audio manager and mixer
+            # this mixes all currently played sounds, pushes buffers etc.
+            core.update()
+    """
     # c types
     cdef int loop
     cdef gau.SampleSourceLoop* p_loop_src
@@ -147,29 +190,47 @@ cdef class Voice(object):
             )
 
     def play(self):
+        """
+        Set state of this voice to "playing" no matter of current state.
+        """
         ga.handle_play(self.p_handle)
 
     @property
     def playing(self):
+        """
+        ``True`` if sound is currently in "playing" state otherwise ``False``.
+        """
         return bool(ga.handle_playing(self.p_handle))
 
     def stop(self):
+        """
+        Set state of this voice to "stopped" no matter of current state.
+        """
         ga.handle_stop(self.p_handle)
 
     @property
     def stopped(self):
+        """
+        ``True`` if sound is currently in stopped state otherwise ``False``.
+        """
         return bool(ga.handle_stopped(self.p_handle))
 
     def __del__(self):
         ga.handle_destroy(self.p_handle)
 
     def toggle(self):
+        """
+        Toggle between "playing/stopped" states.
+        """
         if self.playing:
             self.stop()
         else:
             self.play()
 
     property pitch:
+        """
+        Voice pitch as a ``[0.0, 1.0]`` float value.
+        """
         def __get__(self):
             cdef ga.float32 value
 
@@ -180,7 +241,11 @@ cdef class Voice(object):
             ga.handle_setParamf(self.p_handle, ga.HANDLE_PARAM_PITCH, value)
 
     property gain:
+        """
+        Voice gain as a ``[0.0, 1.0]`` float value.
+        """
         def __get__(self):
+            """fab"""
             cdef ga.float32 value
 
             ga.handle_getParamf(self.p_handle, ga.HANDLE_PARAM_GAIN, &value)
@@ -190,6 +255,9 @@ cdef class Voice(object):
             ga.handle_setParamf(self.p_handle, ga.HANDLE_PARAM_GAIN, value)
 
     property pan:
+        """
+        Voice pan as a ``[-1.0, 1.0]`` float value.
+        """
         def __get__(self):
             cdef ga.float32 value
 
@@ -201,6 +269,34 @@ cdef class Voice(object):
 
 
 cdef class Sound(object):
+    """
+    ``Sound()`` class represents single instance of audio file/stream in
+    program's memory. It is also capable of one-shot playback (i.e. without
+    ability to loop).
+
+    Args:
+
+        filename (str): filename of file to load
+        ext (str): audio file extension (only ``ogg`` and ``wav`` at
+            the moment)
+        stream (bool): set to ``True`` if this should be streamed instead
+            of loaded as a whole to memery (useful for long audio playbacks)
+
+    Example:
+
+    .. code-block:: python
+
+        from pyrilla import core
+
+        sound = core.Sound("soundfile.ogg", "ogg")
+        sound.play()
+
+        while True:
+            # update internal state of default audio manager and mixer
+            # this mixes all currently played sounds, pushes buffers etc.
+            core.update()
+
+    """
     cdef ga.Sound* p_sound
 
     def __cinit__(self):
@@ -216,6 +312,27 @@ cdef class Sound(object):
             raise SoundIOError("could not load sound file %s as %s" % (filename, ext))
 
     def play(self, on_finish=None, mixer=None):
+        """
+        Create and return new playback handle (``Voice()`` class instance).
+        This voice is already submitted to default or given mixer and will
+        start playing with next audio manager update.
+
+        Returned voice can be controlled (pitch/gain/pan or pause/play) as any
+        other ``Voice()`` class instance.
+
+        Args:
+
+            on_finish (callable): callback to be fired when voice finishes
+                to play. Callback must accept single argument that is sound
+                instance.
+            mixer (pyrilla.Mixer): Mixer that should be used to play new
+                voice. ``None`` value means the default mixer created
+                on module nitialization.
+
+        Returns:
+
+             ``pyrilla.Voice`` instance
+        """
         cdef Voice voice
 
         voice = Voice(self, on_finish, 0, mixer)
