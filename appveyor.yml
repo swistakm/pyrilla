@@ -20,24 +20,25 @@ environment:
       PYTHON_ARCH: 32
       MSVC_VERSION: "Visual Studio 14"
 
-    - PYTHON: "C:\\Python27-x64"
-      PYTHON_ARCH: 64
-      MSVC_VERSION: "Visual Studio 10 Win64"
-
-
-    - PYTHON: "C:\\Python33-x64"
-      PYTHON_ARCH: 64
-      MSVC_VERSION: "Visual Studio 10 Win64"
-      DISTUTILS_USE_SDK: "1"
-
-    - PYTHON: "C:\\Python34-x64"
-      DISTUTILS_USE_SDK: "1"
-      MSVC_VERSION: "Visual Studio 10 Win64"
-      PYTHON_ARCH: 64
-
-    - PYTHON: "C:\\Python35-x64"
-      MSVC_VERSION: "Visual Studio 14 Win64"
-      PYTHON_ARCH: 64
+# x64 builds disabled because libvorbis lacks such support
+#    - PYTHON: "C:\\Python27-x64"
+#      PYTHON_ARCH: 64
+#      MSVC_VERSION: "Visual Studio 10 Win64"
+#
+#
+#    - PYTHON: "C:\\Python33-x64"
+#      PYTHON_ARCH: 64
+#      MSVC_VERSION: "Visual Studio 10 Win64"
+#      DISTUTILS_USE_SDK: "1"
+#
+#    - PYTHON: "C:\\Python34-x64"
+#      DISTUTILS_USE_SDK: "1"
+#      MSVC_VERSION: "Visual Studio 10 Win64"
+#      PYTHON_ARCH: 64
+#
+#    - PYTHON: "C:\\Python35-x64"
+#      MSVC_VERSION: "Visual Studio 14 Win64"
+#      PYTHON_ARCH: 64
 
 init:
   - "ECHO %PYTHON% %PYTHON_ARCH% %MSVC_VERSION%"
