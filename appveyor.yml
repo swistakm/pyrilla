@@ -5,28 +5,38 @@ environment:
   matrix:
     - PYTHON: "C:\\Python27"
       PYTHON_ARCH: 32
+      MSCV_VERSION: Visual Studio 10
 
     - PYTHON: "C:\\Python33"
       PYTHON_ARCH: 32
+      MSCV_VERSION: Visual Studio 10
+
 
     - PYTHON: "C:\\Python34"
       PYTHON_ARCH: 32
+      MSCV_VERSION: Visual Studio 10
 
     - PYTHON: "C:\\Python35"
       PYTHON_ARCH: 32
+      MSCV_VERSION: Visual Studio 14
 
     - PYTHON: "C:\\Python27-x64"
       PYTHON_ARCH: 64
+      MSCV_VERSION: Visual Studio 10
+
 
     - PYTHON: "C:\\Python33-x64"
       PYTHON_ARCH: 64
+      MSCV_VERSION: Visual Studio 10
       DISTUTILS_USE_SDK: "1"
 
     - PYTHON: "C:\\Python34-x64"
       DISTUTILS_USE_SDK: "1"
+      MSCV_VERSION: Visual Studio 10
       PYTHON_ARCH: 64
 
     - PYTHON: "C:\\Python35-x64"
+      MSCV_VERSION: Visual Studio 14
       PYTHON_ARCH: 64
 
 init:
@@ -38,7 +48,6 @@ install:
   # python requirements needed to create distribution
   - "%PYTHON%\\python.exe -m pip install wheel"
   - "%PYTHON%\\python.exe -m pip install cython"
-  - "%PYTHON%\\python.exe -m pip install pypandoc"
   # get latest version of all submodules (gorilla audio)
   - "git submodule update --init --recursive"
 
@@ -46,7 +55,7 @@ build: off
 
 build_script:
    # build gorilla audio that will be later statically linked
-  - "cmake -G \"Visual Studio 10\" gorilla-audio/build -DCMAKE_TOOLCHAIN_FILE=appveyor.%PYTHON_ARCH%.toolchain.cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 -DDIRECTXSDK_PATH=\"%DXSDK_DIR%\""
+  - "cmake -G \"%MSVC_VERSION%\" gorilla-audio/build -DCMAKE_TOOLCHAIN_FILE=appveyor.%PYTHON_ARCH%.toolchain.cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 -DDIRECTXSDK_PATH=\"%DXSDK_DIR%\""
   - "cmake --build . --config Release"
   # build our sdist and wheel distribution
   - "build.cmd %PYTHON%/python setup.py build"
