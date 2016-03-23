@@ -1,11 +1,33 @@
 environment:
-#  global:
-#    DISTUTILS_USE_SDK: "1"
+  global:
+    DISTRIBUTIONS: "bdist_wheel"
 
   matrix:
     - PYTHON: "C:\\Python27"
-      PYTHON_ARCH: "32"
-      DISTRIBUTIONS: "sdist"
+      PYTHON_ARCH: 32
+
+    - PYTHON: "C:\\Python33"
+      PYTHON_ARCH: 32
+
+    - PYTHON: "C:\\Python34"
+      PYTHON_ARCH: 32
+
+    - PYTHON: "C:\\Python35"
+      PYTHON_ARCH: 32
+
+    - PYTHON: "C:\\Python27-x64"
+      PYTHON_ARCH: 64
+
+    - PYTHON: "C:\\Python33-x64"
+      PYTHON_ARCH: 64
+      DISTUTILS_USE_SDK: "1"
+
+    - PYTHON: "C:\\Python34-x64"
+      DISTUTILS_USE_SDK: "1"
+      PYTHON_ARCH: 64
+
+    - PYTHON: "C:\\Python35-x64"
+      PYTHON_ARCH: 64
 
 init:
   - "ECHO %PYTHON% %PYTHON_ARCH%"
