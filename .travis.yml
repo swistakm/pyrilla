@@ -12,15 +12,15 @@ python:
 
 install:
   # python requirements needed to create distribution
-  - "python -m pip install wheel"
-  - "python -m pip install cython"
-  - "pip install dropbox"
+  - python -m pip install wheel
+  - python -m pip install cython
+  - pip install dropbox
   # get latest version of all submodules (gorilla audio)
-  - "git submodule update --init --recursive"
+  - git submodule update --init --recursive
 
 script:
-  - "cmake gorilla-audio/build
-  - "cmake --build . --config Release"
-  - "python setup.py build"
-  - "python setup.py bdist_wheel"
-  - "python dropbox_upload.py"
+  - cmake gorilla-audio/build
+  - cmake --build . --config Release
+  - python setup.py build
+  - python setup.py bdist_wheel
+  - python dropbox_upload.py
