@@ -1,3 +1,5 @@
+version: "$(GIT_HASH)"
+
 environment:
   global:
     DISTRIBUTIONS: "bdist_wheel"
