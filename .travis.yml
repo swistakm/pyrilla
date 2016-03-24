@@ -20,7 +20,6 @@ install:
   - pyenv install $PY_VERSION
   - pyenv local $PY_VERSION
   - python --version
-  - pyenv which python$PY_VERSION
   - python -m pip install wheel
   - python -m pip install cython
   - python -m pip install dropbox
