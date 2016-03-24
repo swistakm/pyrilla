@@ -20,8 +20,8 @@ install:
   - pyenv install $PY_VERSION
   - pyenv local $PY_VERSION
   - python --version
-  - virtualenv build-env
-  - source build-env/bin/activate -p python$PY_VERSION
+  - virtualenv build-env -p python$PY_VERSION
+  - source build-env/bin/activate
   - python --version
   - python -m pip install wheel
   - python -m pip install cython
