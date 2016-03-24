@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+"""
+Script for uploading securely built distributions (artifacts) to private
+Dropbox directory.
+
+Dropbox authorization token should be provided only as environment variable
+in a secure form. In case of CI systems (AppVeyor, Travis CI) this should
+be provided as encrypted value in CI configuration file.
+
+We prefer to use this method instead of native artifacts collection routine
+provided by given CI system because it is more consistent.
+"""
+
 import os
 
 import dropbox

@@ -1,6 +1,8 @@
 environment:
   global:
     DISTRIBUTIONS: "bdist_wheel"
+    DROPBOX_TOKEN:
+      secure: UO64ZwJpnDQe5c7xArS14YWBFiAHsvvnt+DZ4PjLqb10wuI4k4OMGyso5W0/EW8da/BaD52DdYzB5NBWrFn3z7F2HrTZWHe/DTfa17ReebI=
 
   matrix:
     - PYTHON: "C:\\Python27"
@@ -49,6 +51,7 @@ install:
   # python requirements needed to create distribution
   - "%PYTHON%\\python.exe -m pip install wheel"
   - "%PYTHON%\\python.exe -m pip install cython"
+  - "%PYTHON%\\python.exe -m pip install dropbox"
   # get latest version of all submodules (gorilla audio)
   - "git submodule update --init --recursive"
 
@@ -61,6 +64,7 @@ build_script:
   # build our sdist and wheel distribution
   - "build.cmd %PYTHON%/python setup.py build"
   - "build.cmd %PYTHON%/python setup.py %DISTRIBUTIONS%"
+  - "%PYTHON%\\python.exe dropbox_upload.py"
 
 artifacts:
   - path: dist\*
