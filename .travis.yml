@@ -16,12 +16,13 @@ install:
   # python requirements needed to create distribution
   - brew update
   - brew upgrade pyenv
-  - python --version
   - eval "$(pyenv init -)"
   - pyenv install $PY_VERSION
   - pyenv local $PY_VERSION
+  - python --version
   - virtualenv build-env
-  - source build-env/bin/activate
+  - source build-env/bin/activate -p python$PY_VERSION
+  - python --version
   - python -m pip install wheel
   - python -m pip install cython
   - python -m pip install dropbox
@@ -30,6 +31,7 @@ install:
 
 script:
   - source build-env/bin/activate
+  - python --version
   - cmake gorilla-audio/build
   - cmake --build . --config Release
   - python setup.py build
