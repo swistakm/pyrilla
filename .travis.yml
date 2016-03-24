@@ -13,12 +13,12 @@ env:
     - PY_VERSION=3.5.1
 
 before_install:
-  # note: there is cython issue when python2.7 is installed using pyenv on
-  - if [[ "PY_VERSION" != "2.7" ]]; then brew update; fi
-  - if [[ "PY_VERSION" != "2.7" ]]; then brew outdated pyenv || brew upgrade pyenv; fi
-  - if [[ "PY_VERSION" != "2.7" ]]; then pyenv install $PY_VERSION; fi
-  - if [[ "PY_VERSION" != "2.7" ]]; then pyenv local $PY_VERSION; fi
-  - if [[ "PY_VERSION" != "2.7" ]]; then eval "$(pyenv init -)"; fi
+  # note: there is cython issue when python2.7 is installed using pyenv
+  - if [[ "$PY_VERSION" != "2.7" ]]; then brew update; fi
+  - if [[ "$PY_VERSION" != "2.7" ]]; then brew outdated pyenv || brew upgrade pyenv; fi
+  - if [[ "$PY_VERSION" != "2.7" ]]; then pyenv install $PY_VERSION; fi
+  - if [[ "$PY_VERSION" != "2.7" ]]; then pyenv local $PY_VERSION; fi
+  - if [[ "$PY_VERSION" != "2.7" ]]; then eval "$(pyenv init -)"; fi
 
 install:
   # simply for logging
