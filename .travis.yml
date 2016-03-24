@@ -1,17 +1,15 @@
 os: osx
 
+language: generic
+
 env:
   - secure: "adjTXQD1TKE8RnD8HkvemCKRTrO1TabHjqqin/R86Dewx9rbBm/XlV12ElxiW+B+3p9AsUdmxFj3i1WidDG4iuKFULFgKZk9x/d+4IDCChzpGNXYKxgh+lVtmGwVdX056XP/luiS2WmG6HCjMYMybNc39A1KjLM2ISydmrhANqPgmomTiztcOPXLsdC3f6xlWz+XOQDOCC2br4SnN4S3H6L8j9W5XnjiCJi/i3qVdxUuNSh/32WGxyR1N7p71Vo/ZYJF4hf4hjf/A9IRHytPl9nG6l+of0IZ1hQ83yLX65q4gdbgdrUNCUWF92xUGd2VRbAx2NwP9PLayWN/+IEdRz7WJcszq2cc3lO1xQrtWrVg08/vyJvBgaVA6EmGKiKWCKWGv5PorKU0TtQzqCRu82L7ZT77n4pGrG1CYv+NjQf7SdM2OFpqdcKPAnBVWY8+mfe9IxiNFM0dGzuRA8+RL9XgJWawFs/iaRkIZH1U/WiGS0Tl2xQf7nmDZ0KxNzVEOcnoBq3rZp+BXhksh00JkVjSC69hnLjdVBsnFmHUEgB4ofaT9ICEgC3auYB93/gSRyTIHqbh9irANboRyDplxobrbowRuY9ZOt6S2j5Fe3MXhgB1BjZvvuJbgS9ohQX7FR+VxZSasyfeGaTiFpPw6eiORG+NLzGkehsk9apbdto="
 
-python:
-  - "2.6"
-  - "2.7"
-  - "3.2"
-  - "3.3"
-  - "3.4"
 
 install:
   # python requirements needed to create distribution
+  - virtualenv build-env
+  - source build-env/bin/activate
   - python -m pip install wheel
   - python -m pip install cython
   - pip install dropbox
@@ -19,6 +17,7 @@ install:
   - git submodule update --init --recursive
 
 script:
+  - source build-env/bin/activate
   - cmake gorilla-audio/build
   - cmake --build . --config Release
   - python setup.py build
