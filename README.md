@@ -1,3 +1,8 @@
+| Windows build | Mac OS X build |
+| ------------- | -------------- |
+| [![Build status](https://ci.appveyor.com/api/projects/status/y8vq560sdve1ytct?svg=true)](https://ci.appveyor.com/project/swistakm/pyrilla) | [![Build Status](https://travis-ci.org/swistakm/pyrilla.svg?branch=master)](https://travis-ci.org/swistakm/pyrilla) |
+
+
 # pyrilla
 
 pyrilla is a self-contained statically linked binding to
