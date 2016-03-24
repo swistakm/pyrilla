@@ -17,7 +17,7 @@ install:
   - brew update
   - brew outdated pyenv || brew upgrade pyenv
   - eval "$(pyenv init -)"
-  - pyenv install $PY_VERSION
+  - pyenv install $PY_VERSION -f
   - pyenv local $PY_VERSION
   - python --version
   - python -m pip install wheel
@@ -28,6 +28,7 @@ install:
 
 script:
   - python --version
+  - pip freeze
   - cmake gorilla-audio/build
   - cmake --build . --config Release
   - python setup.py build
