@@ -19,6 +19,9 @@ before_install:
   - if [[ "$PY_VERSION" != "2.7" ]]; then pyenv install $PY_VERSION; fi
   - if [[ "$PY_VERSION" != "2.7" ]]; then pyenv local $PY_VERSION; fi
   - if [[ "$PY_VERSION" != "2.7" ]]; then eval "$(pyenv init -)"; fi
+  # note: but it is required to run everythin in virtualenv
+  - if [[ "$PY_VERSION" == "2.7" ]]; virtualenv build-env; fi
+  - if [[ "$PY_VERSION" == "2.7" ]]; source build-env/bin/activate; fi
 
 install:
   # simply for logging
