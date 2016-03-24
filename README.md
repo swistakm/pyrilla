@@ -11,6 +11,49 @@ without any external dependencies with single `pip install pyrilla` command.
 It is built with cython and its API is inspired by part of great but
 unmantained [bacon](https://github.com/aholkner/bacon) game engine.
 
+It works without any problems under Mac OS X and Windows. Linux support is
+planned in a near future.
+
+
+# pyrilla on PyPI
+
+Pyrilla is wrapper on Gorilla Audio C library that is statically linked during
+installation. For developers convenience it is distributed on PyPI as binary
+wheels for Windows and Mac OS X. On Windows and Mac OS X it can be easily
+instaled with pip:
+
+    pip install pyrilla
+    
+Most up-to-date list of provided distributions is available on pyrilla's
+[project page on PyPI](https://pypi.python.org/pypi/pyrilla/0.0.1). Depending
+on target platform the underlying Gorilla Audio library is compiled with 
+slightly different settings:
+
+| Target platform | Available Python versions | Audio backend | Arch  |
+| --------------- | ------------------------- | ------------- | ----- |
+| Windows         | py27, py33, py34, py35    | XAudio2       | 32bit |
+| Mac OS X        | py27                      | OpenAL        | 32bit |
+
+64 bit builds for x64 Python versions are not supported yet because I did
+not manage to compile libvorbis version bundled with Gorilla Audio under
+x64 compiler yet.
+
+If you really need support for other platform (64bit, Linux, whatever) or more 
+Python versions then fill issue on GitHub repository for this project 
+so I can prioritize my work. I don't want to spent my time on providing more 
+distributions not knwowing if anyone really needs them.
+
+Note that there is no way to provide binary wheels for Linux platform at the
+moment and pyrilla source distribution (sdist) available on PyPI is still bit
+broken. Generally it is not supposed to compile on Linux. This is going to
+change in future. If you want to use pyrilla on Linux you need to build it by
+yourself on your platform. The process is preety straightforward and described
+in *building* section of this README.
+
+Last but not least, there is also some support for cygwin in this package
+but there is no binary wheel for this environment yet. If you want to use
+pyrilla under cygwin then you need to compile manually too.
+
 
 # usage
 
@@ -62,14 +105,34 @@ Building pyrilla prerequisites:
 * cmake
 * make
 
-Build gorilla-audio
+If you are going to build this package then remeber that Gorilla Audio is
+bundled with this repository as Git submodule from my unofficial fork on
+GitHub (under `gorilla-audio` directory). You need to eaither clone this
+repository with `--recursive` Git flag or init submodules manually:
 
-    cd gorilla-audio/build
-    cmake .
-    make
+    git submodule update --init --recursive
+
+Use cmake to build build gorilla-audio
+
+    cmake gorilla-audio/build
+    cmake --build . --config Release
+    python setup.py build
 
 For windows (also on cygwin):
 
-    cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 -DDIRECTX_XAUDIO2_LIBRARY=../../DirectXSdk/Lib/x86/xapobase.lib .
-    # use additional '--config Release' for builds with Visual Studio
-    cmake --build .
+    cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 .
+    cmake --config Release --build .
+
+
+Then build and install the python extension:
+
+    python setup.py build
+    python setup.py install
+
+
+Note that building for Windows may be bit trickier. If your personal
+environment is broken and compilation step for Gorilla Audio does not find
+the correct path for DirectX SDK and/or XAudio2 lib file. If you have same problems as I have then
+you probably need to provide this path manually to first cmake call:
+
+    -DDIRECTX_XAUDIO2_LIBRARY=path/to/the/DirectXSdk/Lib/x86/xapobase.lib
