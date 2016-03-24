@@ -18,7 +18,7 @@ install:
   - brew outdated pyenv || brew upgrade pyenv
   - eval "$(pyenv init -)"
   - pyenv install $PY_VERSION -f
-  - pyenv local $PY_VERSION
+  - pyenv global $PY_VERSION
   - python --version
   - python -m pip install wheel
   - python -m pip install cython
