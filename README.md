@@ -50,9 +50,9 @@ change in future. If you want to use pyrilla on Linux you need to build it by
 yourself on your platform. The process is preety straightforward and described
 in *building* section of this README.
 
-Last but not least, there is also some support for cygwin in this package
-but there is no binary wheel for this environment yet. If you want to use
-pyrilla under cygwin then you need to compile manually too.
+Last but not least, there is also some support for cygwin. Unfortunately there
+is no binary wheel on PyPI for this environment yet. If you want to use
+pyrilla under cygwin then you need to compile it manually.
 
 
 # usage
