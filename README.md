@@ -34,12 +34,12 @@ Most up-to-date list of provided distributions is available on pyrilla's
 on target platform the underlying Gorilla Audio library is compiled with 
 slightly different settings:
 
-| Target platform | Available Python versions | Audio backend | Arch  |
-| --------------- | ------------------------- | ------------- | ----- |
-| Windows         | py27, py33, py34, py35    | XAudio2       | 32bit |
-| Mac OS X        | py27                      | OpenAL        | 32bit |
+| Target platform | Available Python versions | Audio backend | Arch         |
+| --------------- | ------------------------- | ------------- | ------------ |
+| Windows         | py27, py33, py34, py35    | XAudio2       | 32bit        |
+| Mac OS X        | py27, py33, py34, py35    | OpenAL        | intel/x86_64 |
 
-64 bit builds for x64 Python versions are not supported yet because I did
+64 bit builds for Windows are not supported yet because I did
 not manage to compile libvorbis version bundled with Gorilla Audio under
 x64 compiler yet.
 
