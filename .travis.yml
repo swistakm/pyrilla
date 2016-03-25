@@ -10,7 +10,7 @@ env:
     - PYTHON_CONFIGURE_OPTS="--enable-universalsdk=/ --with-universal-archs=intel"
 
   matrix:
-    - PY_VERSION=2.7
+    - PY_VERSION=2.7.11
     - PY_VERSION=3.3.6
     - PY_VERSION=3.4.4
     - PY_VERSION=3.5.1
