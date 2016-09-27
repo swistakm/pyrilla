@@ -13,7 +13,6 @@ environment:
       PYTHON_ARCH: 32
       MSVC_VERSION: "Visual Studio 10"
 
-
     - PYTHON: "C:\\Python34"
       PYTHON_ARCH: 32
       MSVC_VERSION: "Visual Studio 10"
@@ -27,20 +26,19 @@ environment:
       PYTHON_ARCH: 64
       MSVC_VERSION: "Visual Studio 10 Win64"
 
-
     - PYTHON: "C:\\Python33-x64"
       PYTHON_ARCH: 64
       MSVC_VERSION: "Visual Studio 10 Win64"
       DISTUTILS_USE_SDK: "1"
 
     - PYTHON: "C:\\Python34-x64"
-      DISTUTILS_USE_SDK: "1"
-      MSVC_VERSION: "Visual Studio 10 Win64"
       PYTHON_ARCH: 64
+      MSVC_VERSION: "Visual Studio 10 Win64"
+      DISTUTILS_USE_SDK: "1"
 
     - PYTHON: "C:\\Python35-x64"
-      MSVC_VERSION: "Visual Studio 14 Win64"
       PYTHON_ARCH: 64
+      MSVC_VERSION: "Visual Studio 14 Win64"
 
 init:
   - "ECHO %PYTHON% %PYTHON_ARCH% %MSVC_VERSION%"
@@ -50,6 +48,10 @@ install:
   - set
   # python requirements needed to create distribution
   - "%PYTHON%\\python.exe -m pip install wheel"
+
+  # try to fix cython install (see: https://matthew-brett.github.io/pydagogue/python_msvc.html)
+  - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64/vcvars64.bat"
+
   - "%PYTHON%\\python.exe -m pip install cython"
   - "%PYTHON%\\python.exe -m pip install dropbox"
   # get latest version of all submodules (gorilla audio)
