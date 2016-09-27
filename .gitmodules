@@ -1,3 +1,4 @@
 [submodule "gorilla-audio"]
-	path = gorilla-audio
-	url = https://github.com/swistakm/gorilla-audio
+    path = gorilla-audio
+    url = https://github.com/swistakm/gorilla-audio
+    branch = experiment/libvorbis-as-submodule
