@@ -49,7 +49,9 @@ install:
   # python requirements needed to create distribution
   - "%PYTHON%\\python.exe -m pip install wheel"
 
-  # try to fix cython install (see: https://matthew-brett.github.io/pydagogue/python_msvc.html)
+  # try to fix cython install, see:
+  # * https://matthew-brett.github.io/pydagogue/python_msvc.html
+  # * https://blog.ionelmc.ro/2014/12/21/compiling-python-extensions-on-windows/
   - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64/vcvars64.bat"
 
   - "%PYTHON%\\python.exe -m pip install cython"

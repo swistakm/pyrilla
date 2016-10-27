@@ -36,20 +36,17 @@ slightly different settings:
 
 | Target platform | Available Python versions | Audio backend | Arch         |
 | --------------- | ------------------------- | ------------- | ------------ |
-| Windows         | py27, py33, py34, py35    | XAudio2       | 32bit        |
+| Windows         | py27, py33, py34, py35    | XAudio2       | Win32/Win64  |
 | Mac OS X        | py27, py33, py34, py35    | OpenAL        | intel/x86_64 |
 
-64 bit builds for Windows are not supported yet because I did
-not manage to compile libvorbis version bundled with Gorilla Audio under
-x64 compiler yet.
 
-If you really need support for other platform (64bit, Linux, whatever) or more 
+If you really need support for other platform (Linux, whatever) or more 
 Python versions then fill issue on GitHub repository for this project 
-so I can prioritize my work. I don't want to spent my time on providing more 
-distributions not knwowing if anyone really needs them.
+so I can prioritize my work. I don't want to spend my time on providing more 
+distributions not knowing if anyone really needs them.
 
 Note that there is no way to provide binary wheels for Linux platform at the
-moment and pyrilla source distribution (sdist) available on PyPI is still bit
+moment and pyrilla source distribution (sdist) available on PyPI is still a bit
 broken. Generally it is not supposed to compile on Linux. This is going to
 change in future. If you want to use pyrilla on Linux you need to build it by
 yourself on your platform. The process is preety straightforward and described
@@ -123,7 +120,7 @@ Use cmake to build build gorilla-audio
     cmake --build . --config Release
     python setup.py build
 
-For windows (also on cygwin):
+For Windows (also on cygwin):
 
     cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 .
     cmake --config Release --build .
@@ -137,7 +134,8 @@ Then build and install the python extension:
 
 Note that building for Windows may be bit trickier. If your personal
 environment is broken and compilation step for Gorilla Audio does not find
-the correct path for DirectX SDK and/or XAudio2 lib file. If you have same problems as I have then
-you probably need to provide this path manually to first cmake call:
+the correct path for DirectX SDK and/or XAudio2 lib file. If you have same 
+problems as I have then you probably need to provide this path manually to 
+first cmake call:
 
     -DDIRECTX_XAUDIO2_LIBRARY=path/to/the/DirectXSdk/Lib/x86/xapobase.lib
