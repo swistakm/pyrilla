@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+yum install -y cmake
 cmake /io/gorilla-audio/build
 cmake --build . --config Release
 
@@ -9,7 +10,7 @@ for PYBIN in /opt/python/*/bin; do
     if [[ ! $PYBIN == *"26"* ]]; then
         echo -e "\n\nBuilding wheel for $PYBIN"
 
-        ${PYBIN}/pip install -r /io/doc/requirements-dev.txt
+        ${PYBIN}/pip install
         ${PYBIN}/pip wheel /io/ -w /io/dist/
 
     fi
