@@ -1,6 +1,5 @@
 environment:
   global:
-    DISTRIBUTIONS: "bdist_wheel"
     DROPBOX_TOKEN:
       secure: UO64ZwJpnDQe5c7xArS14YWBFiAHsvvnt+DZ4PjLqb10wuI4k4OMGyso5W0/EW8da/BaD52DdYzB5NBWrFn3z7F2HrTZWHe/DTfa17ReebI=
 
@@ -63,12 +62,14 @@ build: off
 
 build_script:
    # build gorilla audio that will be later statically linked
-  - "cmake -G \"%MSVC_VERSION%\" gorilla-audio/build -DCMAKE_TOOLCHAIN_FILE=appveyor.%PYTHON_ARCH%.toolchain.cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 -DDIRECTXSDK_PATH=\"%DXSDK_DIR%\""
+  - "cmake -G \"%MSVC_VERSION%\" gorilla-audio/build -DCMAKE_TOOLCHAIN_FILE=ci/appveyor.%PYTHON_ARCH%.toolchain.cmake -DENABLE_OPENAL:STRING=0 -DENABLE_XAUDIO2:STRING=1 -DENABLE_DIRECTSOUND:STRING=0 -DDIRECTXSDK_PATH=\"%DXSDK_DIR%\""
   - "cmake --build . --config Release"
   # build our sdist and wheel distribution
-  - "build.cmd %PYTHON%/python setup.py build"
-  - "build.cmd %PYTHON%/python setup.py %DISTRIBUTIONS%"
+  - "ci\\appveyor_build.cmd %PYTHON%/python.exe -m pip wheel . -w dist"
   - "%PYTHON%\\python.exe dropbox_upload.py"
+
+on_success:
+  - "%PYTHON%\\python.exe ci\\dropbox_upload.py"
 
 artifacts:
   - path: dist\*

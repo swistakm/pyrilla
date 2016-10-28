@@ -1,24 +1,38 @@
-os: osx
-
 language: generic
 
 env:
   global:
     - secure: "adjTXQD1TKE8RnD8HkvemCKRTrO1TabHjqqin/R86Dewx9rbBm/XlV12ElxiW+B+3p9AsUdmxFj3i1WidDG4iuKFULFgKZk9x/d+4IDCChzpGNXYKxgh+lVtmGwVdX056XP/luiS2WmG6HCjMYMybNc39A1KjLM2ISydmrhANqPgmomTiztcOPXLsdC3f6xlWz+XOQDOCC2br4SnN4S3H6L8j9W5XnjiCJi/i3qVdxUuNSh/32WGxyR1N7p71Vo/ZYJF4hf4hjf/A9IRHytPl9nG6l+of0IZ1hQ83yLX65q4gdbgdrUNCUWF92xUGd2VRbAx2NwP9PLayWN/+IEdRz7WJcszq2cc3lO1xQrtWrVg08/vyJvBgaVA6EmGKiKWCKWGv5PorKU0TtQzqCRu82L7ZT77n4pGrG1CYv+NjQf7SdM2OFpqdcKPAnBVWY8+mfe9IxiNFM0dGzuRA8+RL9XgJWawFs/iaRkIZH1U/WiGS0Tl2xQf7nmDZ0KxNzVEOcnoBq3rZp+BXhksh00JkVjSC69hnLjdVBsnFmHUEgB4ofaT9ICEgC3auYB93/gSRyTIHqbh9irANboRyDplxobrbowRuY9ZOt6S2j5Fe3MXhgB1BjZvvuJbgS9ohQX7FR+VxZSasyfeGaTiFpPw6eiORG+NLzGkehsk9apbdto="
 
-  matrix:
-    - PY_VERSION=2.7
-    - PY_VERSION=3.3.6
-    - PY_VERSION=3.4.4
-    - PY_VERSION=3.5.1
+matrix:
+  include:
+    - os: osx
+      env: PY_VERSION=2.7
+
+    - os: osx
+      env: PY_VERSION=3.3.6
+
+    - os: osx
+      env: PY_VERSION=3.4.4
+
+    - os: osx
+      env: PY_VERSION=3.5.1
+
+    - os: linux
+      sudo: required
+      dist: trusty
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+      services: docker
+
+    - os: linux
+      sudo: required
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686 PRE_CMD=linux32
+      services: docker
 
 before_install:
+  - ./ci/travis_before.sh
+
   # note: there is cython issue when python2.7 is installed using pyenv
-  - if [[ "$PY_VERSION" != "2.7" ]]; then brew update; fi
-  - if [[ "$PY_VERSION" != "2.7" ]]; then brew outdated pyenv || brew upgrade pyenv; fi
-  - if [[ "$PY_VERSION" != "2.7" ]]; then pyenv install $PY_VERSION; fi
-  - if [[ "$PY_VERSION" != "2.7" ]]; then pyenv local $PY_VERSION; fi
-  - if [[ "$PY_VERSION" != "2.7" ]]; then eval "$(pyenv init -)"; fi
   # note: but it is required to run everything in virtualenv
   - if [[ "$PY_VERSION" == "2.7" ]]; then virtualenv build-env; fi
   - if [[ "$PY_VERSION" == "2.7" ]]; then source build-env/bin/activate; fi
@@ -34,10 +48,12 @@ install:
   - git submodule update --init --recursive
 
 script:
-  - python --version
-  - pip freeze
-  - cmake gorilla-audio/build
-  - cmake --build . --config Release
-  - python setup.py build
-  - python setup.py bdist_wheel
+  - ./ci/travis_build.sh
+
+after_success:
+  # note: on certain environments there may be a problem with installing
+  #       dropbox without virtualenv
+  - virtualenv dist-env
+  - source dist-env/bin/activate
+  - python -m pip install dropbox
   - python dropbox_upload.py
