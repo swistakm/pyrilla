@@ -21,12 +21,12 @@ matrix:
     - os: linux
       sudo: required
       dist: trusty
-      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+      env: DOCKER_IMAGE=quay.io/swistakm/pyrilla-x86_64
       services: docker
 
     - os: linux
       sudo: required
-      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686 PRE_CMD=linux32
+      env: DOCKER_IMAGE=quay.io/swistakm/pyrilla_i686 PRE_CMD=linux32
       services: docker
 
 before_install:

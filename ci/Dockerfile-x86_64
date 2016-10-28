@@ -1,4 +1,4 @@
-FROM quay.io/pypa/manylinux1_x86-64:latest
+FROM quay.io/pypa/manylinux1_x86_64:latest
 
 MAINTAINER Michał Jaworski <swistakm@gmail.com>
 
