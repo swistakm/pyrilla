@@ -42,8 +42,7 @@ install:
   - python --version
   # python requirements needed to create distribution
   - python -m pip install wheel
-  - python -m pip install cython
-  - python -m pip install dropbox
+
   # get latest version of all submodules (gorilla audio)
   - git submodule update --init --recursive
 

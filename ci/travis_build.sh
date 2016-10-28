@@ -9,7 +9,7 @@ if [[ $TRAVIS_OS_NAME == "osx" ]]; then
 
     cmake gorilla-audio/build
     cmake --build . --config Release
-    python -m pip install -r doc/requirements-dev.txt
+
     python -m pip wheel . -w dist/
 
 else
