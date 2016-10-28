@@ -34,10 +34,11 @@ Most up-to-date list of provided distributions is available on pyrilla's
 on target platform the underlying Gorilla Audio library is compiled with 
 slightly different settings:
 
-| Target platform | Available Python versions | Audio backend | Arch         |
-| --------------- | ------------------------- | ------------- | ------------ |
-| Windows         | py27, py33, py34, py35    | XAudio2       | Win32/Win64  |
-| Mac OS X        | py27, py33, py34, py35    | OpenAL        | intel/x86_64 |
+| Target platform | Available Python versions | Audio backend | Arch                |
+| --------------- | ------------------------- | ------------- | ------------------- |
+| Windows         | py27, py33, py34, py35    | XAudio2       | Win32/Win64         |
+| Mac OS X        | py27, py33, py34, py35    | OpenAL        | intel/x86_64        |
+| Linux           | py27, py33, py34, py35    | OpenAL        | x86_64/i686 (32bit) |
 
 
 If you really need support for other platform (Linux, whatever) or more 
@@ -45,8 +46,10 @@ Python versions then fill issue on GitHub repository for this project
 so I can prioritize my work. I don't want to spend my time on providing more 
 distributions not knowing if anyone really needs them.
 
-Note that there is no way to provide binary wheels for Linux platform at the
-moment and pyrilla source distribution (sdist) available on PyPI is still a bit
+Note: Linux wheels for pyrilla on PyPI are portable Linux build distributions 
+(i.e. `manylinux1`) as described by [PEP 513](https://www.python.org/dev/peps/pep-0513/).
+
+Source distribution (sdist) for pyrilla available on PyPI is still a bit
 broken. Generally it is not supposed to compile on Linux. This is going to
 change in future. If you want to use pyrilla on Linux you need to build it by
 yourself on your platform. The process is preety straightforward and described

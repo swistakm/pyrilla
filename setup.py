@@ -26,6 +26,11 @@ elif sys.platform == 'darwin':
         "/System/Library/Frameworks/OpenAL.framework/OpenAL",
     ]
     LIBRARIES = []
+else:  # linux
+    EXTENSIONS_EXTRA_OBJECTS = [
+        "gorilla-audio/bin/linux/Release/libgorilla.a"
+    ]
+    LIBRARIES = []
 
 
 def get_version(version_tuple):
