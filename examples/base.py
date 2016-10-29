@@ -7,9 +7,9 @@ from pyrilla import core
 
 def main(file_handle):
     if len(argv) != 2:
-        print """
+        print("""
         usage: program filename
-        """
+        """)
         exit(1)
 
     else:
@@ -17,7 +17,7 @@ def main(file_handle):
         ext = filename.rpartition('.')[2]
 
         print("will load %s as %s" % (filename, ext))
-        file_handle(filename, ext)
+        file_handle(filename.encode('utf-8'), ext.encode('utf-8'))
 
 
 def update_till_interrupt(on_interrupt=None):

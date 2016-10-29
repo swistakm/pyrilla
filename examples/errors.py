@@ -10,7 +10,7 @@ def main():
         print(str(err))
 
     try:
-        Sound("nonexisting.foo", "ridiculous")
+        Sound(b"nonexisting.foo", b"ridiculous")
     except SoundIOError as err:
         print(str(err))
 
