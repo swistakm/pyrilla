@@ -94,10 +94,16 @@ setup(
 
         'Programming Language :: Cython',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2 :: Only',
+        'Programming Language :: Python :: 2 :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3 :: 3.3',
+        'Programming Language :: Python :: 2 :: 3.4',
+        'Programming Language :: Python :: 2 :: 3.5',
+        'Programming Language :: Python :: Implementation :: CPython',
 
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
 
         'Topic :: Multimedia :: Sound/Audio',
         'Topic :: Multimedia :: Sound/Audio :: Mixers',
