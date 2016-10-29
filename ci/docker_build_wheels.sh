@@ -12,7 +12,7 @@ yum install -y openal-devel
 
 cd /io/
 # note: we on x86_64 we need to excplicitely enable Position Independent Code
-cmake --config Release gorilla-audio/build/ . -DCMAKE_C_FLAGS="-fPIC"
+cmake --config Release gorilla-audio/build/ -DCMAKE_C_FLAGS="-fPIC"
 make clean && make VERBOSE=1
 
 # note: we do not target py26 and also it is not supported by latest Cython
