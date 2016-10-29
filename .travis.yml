@@ -21,7 +21,7 @@ matrix:
     - os: linux
       sudo: required
       dist: trusty
-      env: DOCKER_IMAGE=quay.io/swistakm/pyrilla-x86_64
+      env: DOCKER_IMAGE=quay.io/swistakm/pyrilla_x86_64
       services: docker
 
     - os: linux
