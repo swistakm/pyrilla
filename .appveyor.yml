@@ -69,7 +69,7 @@ build_script:
   - "%PYTHON%\\python.exe dropbox_upload.py"
 
 on_success:
-  - if [%APPVEYOR_REPO_BRANCH%]==[master] "%PYTHON%\\python.exe ci\\dropbox_upload.py"
+  - if [%APPVEYOR_REPO_BRANCH%]==[master] call "%PYTHON%\\python.exe ci\\dropbox_upload.py"
 
 artifacts:
   - path: dist\*
