@@ -16,16 +16,18 @@ without any external dependencies with single `pip install pyrilla` command.
 It is built with cython and its API is inspired by part of great but
 unmantained [bacon](https://github.com/aholkner/bacon) game engine.
 
-It works without any problems under Mac OS X and Windows. Linux support is
-planned in a near future.
+It works without any problems on OS X, Windows, and Linux. Officially supported
+Python versions are py27, py33, py34, py35.
 
 
-# pyrilla on PyPI
+# pyrilla on PyPI and supported systems
+[![PyPI version](https://badge.fury.io/py/pyrilla.svg)](https://badge.fury.io/py/pyrilla)
 
 Pyrilla is wrapper on Gorilla Audio C library that is statically linked during
 installation. For developers convenience it is distributed on PyPI as binary
-wheels for Windows and Mac OS X. On Windows and Mac OS X it can be easily
-instaled with pip:
+wheels for Windows, OS X, and Linux. Its extensive built pipeline targets
+different system flavours (32/64bit) and different Python versions.
+On supported systems it can be easily instaled with pip:
 
     pip install pyrilla
     
@@ -41,10 +43,10 @@ slightly different settings:
 | Linux           | py27, py33, py34, py35    | OpenAL        | x86_64/i686 (32bit) |
 
 
-If you really need support for other platform (Linux, whatever) or more 
-Python versions then fill issue on GitHub repository for this project 
-so I can prioritize my work. I don't want to spend my time on providing more 
-distributions not knowing if anyone really needs them.
+If you really need support for other platform or more Python versions then fill
+issue on GitHub repository for this project so I can prioritize my work.
+I don't want to spend my time on providing more distributions not knowing if
+anyone really needs them.
 
 Note: Linux wheels for pyrilla on PyPI are portable Linux build distributions 
 (i.e. `manylinux1`) as described by [PEP 513](https://www.python.org/dev/peps/pep-0513/).
