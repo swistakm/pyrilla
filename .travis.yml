@@ -30,7 +30,9 @@ matrix:
       services: docker
 
 before_install:
-  - ./ci/travis_before.sh
+  # note: this will affect shell environment so we need to source it
+  #       instead of just executing
+  - source ci/travis_before.sh
 
   # note: there is cython issue when python2.7 is installed using pyenv
   # note: but it is required to run everything in virtualenv
