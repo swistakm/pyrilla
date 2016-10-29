@@ -26,6 +26,12 @@ for PYBIN in /opt/python/*/bin; do
     echo -e "\n\nBuilding wheel for $(${PYBIN}/python --version 2>&1)"
 
     ${PYBIN}/pip install Cython
-    ${PYBIN}/pip wheel /io/ -w /io/dist/
+    ${PYBIN}/pip wheel /io/ -w /io/dist-wip/
 
+done
+
+# Bundle external shared libraries into the wheels and fix platform tags
+echo -e "\n\nAuditing wheels:"
+for whl in dist-wip/*.whl; do
+    auditwheel repair $whl -w /io/dist/
 done
