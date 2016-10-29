@@ -55,4 +55,5 @@ after_success:
   - virtualenv dist-env
   - source dist-env/bin/activate
   - python -m pip install dropbox
-  - python dropbox_upload.py
+  # note: we upload dists only on master commits
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then python dropbox_upload.py; fi
