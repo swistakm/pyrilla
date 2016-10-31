@@ -21,8 +21,6 @@ echo -e "\n\nWill build wheels for:"
 for PY in /opt/python/*/bin/python; do echo "* $(${PY} --version 2>&1)"; done
 
 for PYBIN in /opt/python/*/bin; do
-    # note: latest version of cython does not support py26 so make sure we
-    #       skip building wheels for this dist
     echo -e "\n\nBuilding wheel for $(${PYBIN}/python --version 2>&1)"
 
     ${PYBIN}/pip install Cython
