@@ -5,22 +5,12 @@ travis_fold() {
   echo -en "travis_fold:${action}:${name}\r"
 }
 
-
 travis_fold start cmake-libogg
 # note: something with cmake is broken so we need to run it manually
 # todo: rectify this
 cd /io/gorilla-audio/ext/libogg
 cmake .
 travis_fold end cmake-libogg
-
-
-travis_fold start yum-openal
-# note: could not do that in Dockerfile
-# todo: try to support it directly in gorilla-audio so we don't have to
-# todo: install system package for headers
-yum install -y openal-devel
-travis_fold end yum-openal
-
 
 cd /io/
 # note: we on x86_64 we need to excplicitely enable Position Independent Code

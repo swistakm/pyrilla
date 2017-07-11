@@ -14,4 +14,6 @@ RUN ./bootstrap
 RUN make
 RUN make install
 
-
+# Force 32 bit address mode emulation so yum during builds knows it is targeted
+# for x86 arch.
+RUN linux32 yum install openal-devel -y && yum clean all -y

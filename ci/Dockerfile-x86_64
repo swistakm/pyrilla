@@ -13,3 +13,5 @@ WORKDIR /opt/cmake-3.6.2
 RUN ./bootstrap
 RUN make
 RUN make install
+
+RUN yum install openal-devel -y && yum clean all -y
